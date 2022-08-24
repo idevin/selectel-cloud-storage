@@ -36,7 +36,7 @@ class File implements FileContract, JsonSerializable
      *
      * @var bool
      */
-    protected $deleted = false;
+    protected bool $deleted = false;
 
     /**
      * @param \ArgentCrusade\Selectel\CloudStorage\Contracts\Api\ApiClientContract $api
@@ -60,11 +60,11 @@ class File implements FileContract, JsonSerializable
      *
      * @return mixed|null
      */
-    protected function fileData($key, $default = null)
+    protected function fileData($key, $default = null): mixed
     {
         $this->guardDeletedFile();
 
-        return isset($this->data[$key]) ? $this->data[$key] : $default;
+        return $this->data[$key] ?? $default;
     }
 
     /**
@@ -74,7 +74,7 @@ class File implements FileContract, JsonSerializable
      *
      * @return string
      */
-    protected function absolutePath($path = '')
+    protected function absolutePath(string $path = ''): string
     {
         if (!$path) {
             $path = $this->path();
@@ -316,7 +316,7 @@ class File implements FileContract, JsonSerializable
      * @throws \LogicException
      * @throws \ArgentCrusade\Selectel\CloudStorage\Exceptions\ApiRequestFailedException
      */
-    public function delete()
+    public function delete(): bool
     {
         $this->guardDeletedFile();
 
@@ -339,7 +339,7 @@ class File implements FileContract, JsonSerializable
      *
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'name' => $this->name(),
