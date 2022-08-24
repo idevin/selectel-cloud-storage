@@ -40,14 +40,14 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @var array
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * Determines if container data was already loaded.
      *
      * @var bool
      */
-    protected $dataLoaded = false;
+    protected bool $dataLoaded = false;
 
     /**
      * Container URL. Uses "X-Storage-Url/container-name" by default.
@@ -80,7 +80,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return mixed
      */
-    protected function objectData($key, $default = null)
+    protected function objectData($key, $default = null): mixed
     {
         if (!$this->dataLoaded) {
             $this->loadContainerData();
@@ -130,7 +130,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return string
      */
-    protected function objectMetaType()
+    protected function objectMetaType(): string
     {
         return 'Container';
     }
@@ -152,7 +152,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return \ArgentCrusade\Selectel\CloudStorage\Contracts\Api\ApiClientContract
      */
-    public function apiClient()
+    public function apiClient(): ApiClientContract
     {
         return $this->api;
     }
@@ -162,7 +162,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'name' => $this->name(),
@@ -179,7 +179,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return string
      */
-    public function name()
+    public function name(): string
     {
         return $this->containerName();
     }
@@ -189,7 +189,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return string
      */
-    public function containerName()
+    public function containerName(): string
     {
         return $this->containerName;
     }
@@ -201,7 +201,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return string
      */
-    public function url($path = '')
+    public function url($path = ''): string
     {
         return $this->url.($path ? '/'.ltrim($path, '/') : '');
     }
@@ -211,7 +211,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return string
      */
-    public function type()
+    public function type(): string
     {
         return $this->objectData('type', 'public');
     }
@@ -221,7 +221,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return int
      */
-    public function filesCount()
+    public function filesCount(): int
     {
         return intval($this->objectData('count', 0));
     }
@@ -231,7 +231,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return $this->filesCount();
     }
@@ -241,7 +241,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return int
      */
-    public function size()
+    public function size(): int
     {
         return intval($this->objectData('bytes', 0));
     }
@@ -251,7 +251,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return int
      */
-    public function uploadedBytes()
+    public function uploadedBytes(): int
     {
         return intval($this->objectData('rx_bytes', 0));
     }
@@ -261,7 +261,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return int
      */
-    public function downloadedBytes()
+    public function downloadedBytes(): int
     {
         return intval($this->objectData('tx_bytes', 0));
     }
@@ -275,7 +275,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return string
      */
-    public function setType($type)
+    public function setType($type): string
     {
         if ($this->type() === $type) {
             return $type;
@@ -301,7 +301,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return static
      */
-    public function setUrl($url)
+    public function setUrl($url): static
     {
         $this->url = $url;
 
@@ -313,7 +313,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return \ArgentCrusade\Selectel\CloudStorage\Contracts\FluentFilesLoaderContract
      */
-    public function files()
+    public function files(): Contracts\FluentFilesLoaderContract|FluentFilesLoader
     {
         return new FluentFilesLoader($this->api, $this->name(), $this->absolutePath());
     }
@@ -327,7 +327,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return string
      */
-    public function createDir($name)
+    public function createDir($name): string
     {
         $response = $this->api->request('PUT', $this->absolutePath($name), [
             'headers' => [
@@ -351,7 +351,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return bool
      */
-    public function deleteDir($name)
+    public function deleteDir($name): bool
     {
         $response = $this->api->request('DELETE', $this->absolutePath($name));
 
@@ -374,7 +374,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return string
      */
-    public function uploadFromString($path, $contents, array $params = [], $verifyChecksum = true)
+    public function uploadFromString($path, $contents, array $params = [], $verifyChecksum = true): string
     {
         return $this->uploader->upload($this->api, $this->absolutePath($path), $contents, $params, $verifyChecksum);
     }
@@ -390,7 +390,7 @@ class Container implements ContainerContract, FilesTransformerContract, Countabl
      *
      * @return string
      */
-    public function uploadFromStream($path, $resource, array $params = [])
+    public function uploadFromStream($path, $resource, array $params = []): string
     {
         return $this->uploader->upload($this->api, $this->absolutePath($path), $resource, $params, false);
     }
